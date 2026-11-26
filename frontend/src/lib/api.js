@@ -1,5 +1,11 @@
 // Central API base URL – change once here if port changes
-export const API_BASE = 'http://localhost:5000/api';
+// Works whether you open the site on this machine (localhost) or from another
+// device on the network (e.g. phone / LAN IP): use the same host, port 5000.
+const API_HOST = typeof window !== 'undefined' && window.location?.hostname
+  ? window.location.hostname
+  : 'localhost';
+
+export const API_BASE = `http://${API_HOST}:5000/api`;
 
 /**
  * Format price in PKR

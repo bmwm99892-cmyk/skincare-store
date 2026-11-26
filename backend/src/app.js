@@ -7,6 +7,7 @@ import publicRoutes from './publicRoutes.js';
 import orderRoutes from './orderRoutes.js';
 import authRoutes from './authRoutes.js';
 import userRoutes from './userRoutes.js';
+import chatRoutes from './chatRoutes.js';
 
 dotenv.config();
 
@@ -15,7 +16,15 @@ const allowedOrigin = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 const app = express();
 
 // CORS and JSON body parsing
-app.use(cors({ origin: allowedOrigin }));
+// Allow localhost/127.0.0.1 on any port, plus the explicitly configured origin
+app.use(cors({
+  origin(origin, cb) {
+    if (!origin || cb === undefined) return cb(null, true); // same-origin / curl
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return cb(null, true);
+    if (origin === allowedOrigin) return cb(null, true);
+    return cb(null, true); // permissive for LAN dev access
+  },
+}));
 app.use(express.json());
 
 // ── JWT Middleware ──────────────────────────────────────────────────────────
@@ -48,6 +57,9 @@ app.use('/api', publicRoutes);
 
 // ── Order Routes (Place Order) ───────────────────────────────────────────────
 app.use('/api', orderRoutes);
+
+// ── AI Skincare Assistant (Ollama) ───────────────────────────────────────────
+app.use('/api/chat', chatRoutes);
 
 // ── Protected Customer Routes (My Orders, Profile) ───────────────────────────
 app.use('/api/user', verifyToken, userRoutes);
