@@ -12,6 +12,7 @@ import CartDrawer from './components/CartDrawer.jsx';
 import ProductQuickView from './components/ProductQuickView.jsx';
 import Login from './pages/Login.jsx';
 import Admin from './pages/Admin.jsx';
+import AiChatWidget from './components/AiChatWidget.jsx';
 import { API_BASE, normaliseProduct } from './lib/api.js';
 
 const initialPath = () => window.location.pathname.replace(/\/$/, '') || '/';
@@ -215,6 +216,7 @@ export default function App() {
       )}
       <main key={currentPath}>{page}</main>
       {!isAdminPanel && <Footer onSelectCategory={selectCategory} onNavigate={navigate} />}
+      {!isAdminPanel && <AiChatWidget />}
 
       {isCartOpen && (
         <CartDrawer

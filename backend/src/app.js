@@ -7,6 +7,7 @@ import publicRoutes from './publicRoutes.js';
 import orderRoutes from './orderRoutes.js';
 import authRoutes from './authRoutes.js';
 import userRoutes from './userRoutes.js';
+import chatRoutes from './chatRoutes.js';
 
 dotenv.config();
 
@@ -48,6 +49,9 @@ app.use('/api', publicRoutes);
 
 // ── Order Routes (Place Order) ───────────────────────────────────────────────
 app.use('/api', orderRoutes);
+
+// ── AI Skincare Assistant (Ollama) ───────────────────────────────────────────
+app.use('/api/chat', chatRoutes);
 
 // ── Protected Customer Routes (My Orders, Profile) ───────────────────────────
 app.use('/api/user', verifyToken, userRoutes);
