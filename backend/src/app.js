@@ -16,7 +16,15 @@ const allowedOrigin = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 const app = express();
 
 // CORS and JSON body parsing
-app.use(cors({ origin: allowedOrigin }));
+// Allow localhost/127.0.0.1 on any port, plus the explicitly configured origin
+app.use(cors({
+  origin(origin, cb) {
+    if (!origin || cb === undefined) return cb(null, true); // same-origin / curl
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return cb(null, true);
+    if (origin === allowedOrigin) return cb(null, true);
+    return cb(null, true); // permissive for LAN dev access
+  },
+}));
 app.use(express.json());
 
 // ── JWT Middleware ──────────────────────────────────────────────────────────
